@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+import textwrap
 from contextlib import AsyncExitStack
 from pathlib import Path
 from typing import TYPE_CHECKING, Awaitable, Callable
@@ -180,7 +181,8 @@ class AgentLoop:
             val = next(iter(tc.arguments.values()), None) if tc.arguments else None
             if not isinstance(val, str):
                 return tc.name
-            return f'{tc.name}("{val[:40]}…")' if len(val) > 40 else f'{tc.name}("{val}")'
+            short = textwrap.shorten(val, width=40, placeholder="…")
+            return f'{tc.name}("{short}")'
         return ", ".join(_fmt(tc) for tc in tool_calls)
 
     async def _run_agent_loop(

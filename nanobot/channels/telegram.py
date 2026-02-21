@@ -260,7 +260,8 @@ class TelegramChannel(BaseChannel):
 
         # Send text content
         if msg.content and msg.content != "[empty message]":
-            for chunk in _split_message(msg.content):
+            content = f"`{msg.content}`" if msg.metadata.get("_progress") else msg.content
+            for chunk in _split_message(content):
                 try:
                     html = _markdown_to_telegram_html(chunk)
                     await self._app.bot.send_message(
